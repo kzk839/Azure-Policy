@@ -51,7 +51,6 @@
                             "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
                             "in": [
                                 "*",
-                                "Internet",
                                 "3389",
                                 "22"
                             ]
@@ -61,7 +60,6 @@
                                 "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
                                 "notIn": [
                                     "*",
-                                    "Internet",
                                     "3389",
                                     "22"
                                 ]

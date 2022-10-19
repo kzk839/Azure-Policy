@@ -24,8 +24,15 @@
                                     "equals": "true"
                                 },
                                 {
-                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
-                                    "notIn": "[parameters('allowedIpAddressesList')]"
+                                    "count": {
+                                        "value": "[parameters('allowedIpAddressesList')]",
+                                        "name": "approvedPrefix",
+                                        "where": {
+                                            "value": "[ipRangeContains(current('approvedPrefix'), 'Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')]",
+                                            "equals": false
+                                        }
+                                    },
+                                    "greater": 0
                                 }
                             ]
                         },
@@ -36,10 +43,21 @@
                                     "equals": "true"
                                 },
                                 {
-                                    "not": {
+                                    "count": {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                                        "in": "[parameters('allowedIpAddressesList')]"
-                                    }
+                                        "where": {
+                                            "count": {
+                                                "value": "[parameters('allowedIpAddressesList')]",
+                                                "name": "approvedPrefix",
+                                                "where": {
+                                                    "value": "[ipRangeContains(current('approvedPrefix'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]",
+                                                    "equals": false
+                                                }
+                                            },
+                                            "greater": 0
+                                        }
+                                    },
+                                    "greater": 0
                                 }
                             ]
                         }

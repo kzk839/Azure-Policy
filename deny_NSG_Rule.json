@@ -28,7 +28,7 @@
                                         "value": "[parameters('allowedIpAddressesList')]",
                                         "name": "approvedPrefix",
                                         "where": {
-                                            "value": "[ipRangeContains(current('approvedPrefix'), 'Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')]",
+                                            "value": "[ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
                                             "equals": false
                                         }
                                     },

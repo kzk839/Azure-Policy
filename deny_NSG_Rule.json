@@ -51,13 +51,13 @@
                                                 "name": "approvedPrefix",
                                                 "where": {
                                                     "value": "[ipRangeContains(current('approvedPrefix'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]",
-                                                    "equals": false
+                                                    "equals": true
                                                 }
                                             },
                                             "greater": 0
                                         }
                                     },
-                                    "greater": 0
+                                    "less": "[length(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]"
                                 }
                             ]
                         }

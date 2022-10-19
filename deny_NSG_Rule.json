@@ -24,15 +24,26 @@
                                     "equals": "true"
                                 },
                                 {
-                                    "count": {
-                                        "value": "[parameters('allowedIpAddressesList')]",
-                                        "name": "approvedPrefix",
-                                        "where": {
-                                            "value": "[ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
-                                            "equals": false
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                            "in": [
+                                                "*",
+                                                "Internet"
+                                            ]
+                                        },
+                                        {
+                                            "count": {
+                                                "value": "[parameters('allowedIpAddressesList')]",
+                                                "name": "approvedPrefix",
+                                                "where": {
+                                                    "value": "[ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
+                                                    "equals": true
+                                                }
+                                            },
+                                            "equals": 0
                                         }
-                                    },
-                                    "greater": 0
+                                    ]
                                 }
                             ]
                         },

@@ -37,7 +37,7 @@
                                                 "value": "[parameters('allowedIpAddressesList')]",
                                                 "name": "approvedPrefix",
                                                 "where": {
-                                                    "value": "[ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
+                                                    "value": "[if(not(equals(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'), '*')), ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')), 'false')]",
                                                     "equals": true
                                                 }
                                             },
@@ -61,7 +61,7 @@
                                                 "value": "[parameters('allowedIpAddressesList')]",
                                                 "name": "approvedPrefix",
                                                 "where": {
-                                                    "value": "[ipRangeContains(current('approvedPrefix'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]",
+                                                    "value": "[if(not(equals(current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'), '*')), ipRangeContains(current('approvedPrefix'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]')), 'false')]",
                                                     "equals": true
                                                 }
                                             },

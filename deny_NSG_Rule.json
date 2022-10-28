@@ -24,8 +24,26 @@
                                     "equals": "true"
                                 },
                                 {
-                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
-                                    "notIn": "[parameters('allowedIpAddressesList')]"
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                            "in": [
+                                                "*",
+                                                "Internet"
+                                            ]
+                                        },
+                                        {
+                                            "count": {
+                                                "value": "[parameters('allowedIpAddressesList')]",
+                                                "name": "approvedPrefix",
+                                                "where": {
+                                                    "value": "[if(not(equals(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'), '*')), ipRangeContains(current('approvedPrefix'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')), 'false')]",
+                                                    "equals": true
+                                                }
+                                            },
+                                            "equals": 0
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -36,10 +54,21 @@
                                     "equals": "true"
                                 },
                                 {
-                                    "not": {
+                                    "count": {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                                        "in": "[parameters('allowedIpAddressesList')]"
-                                    }
+                                        "where": {
+                                            "count": {
+                                                "value": "[parameters('allowedIpAddressesList')]",
+                                                "name": "approvedPrefix",
+                                                "where": {
+                                                    "value": "[if(not(equals(current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'), '*')), ipRangeContains(current('approvedPrefix'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]')), 'false')]",
+                                                    "equals": true
+                                                }
+                                            },
+                                            "greater": 0
+                                        }
+                                    },
+                                    "less": "[length(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]"
                                 }
                             ]
                         }
